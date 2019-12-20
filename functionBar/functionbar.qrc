@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/functionBar">
+        <file>more.png</file>
+        <file>more_checked.png</file>
+        <file>menubar_account_ico.png</file>
+        <file>menubar_account_ico_select.png</file>
+        <file>menubar_citizen_ico.png</file>
+        <file>menubar_citizen_ico_select.png</file>
+        <file>menubar_exchange_ico.png</file>
+        <file>menubar_exchange_ico_select.png</file>
+        <file>menubar_name_ico.png</file>
+        <file>menubar_name_ico_select.png</file>
+        <file>menubar_senator_ico.png</file>
+        <file>menubar_senator_ico_select.png</file>
+        <file>menubar_senior_ico.png</file>
+        <file>menubar_senior_ico_select.png</file>
+    </qresource>
+</RCC>
