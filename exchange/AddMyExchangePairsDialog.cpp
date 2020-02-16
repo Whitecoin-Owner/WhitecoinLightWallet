@@ -53,11 +53,11 @@ void AddMyExchangePairsDialog::on_marketBtn1_clicked()
 //    bottomLine->attachToWidget(ui->marketBtn2);
 //}
 
-void AddMyExchangePairsDialog::on_marketBtn3_clicked()
-{
-    showPairsByQuoteAsset("ERCPAX");
-    bottomLine->attachToWidget(ui->marketBtn3);
-}
+//void AddMyExchangePairsDialog::on_marketBtn3_clicked()
+//{
+//    showPairsByQuoteAsset("ERCPAX");
+//    bottomLine->attachToWidget(ui->marketBtn3);
+//}
 
 void AddMyExchangePairsDialog::showPairsByQuoteAsset(QString quoteAsset)
 {
