@@ -24,8 +24,8 @@ void FunctionExchangeWidget::retranslator()
 
 void FunctionExchangeWidget::DefaultShow()
 {
-//    on_exchangeBtn_clicked();
-    on_onchainOrderBtn_clicked();
+    on_exchangeBtn_clicked();
+//    on_onchainOrderBtn_clicked();
 }
 
 void FunctionExchangeWidget::InitWidget()
@@ -35,7 +35,7 @@ void FunctionExchangeWidget::InitWidget()
     ui->onchainOrderBtn->setCheckable(true);
     ui->contractTokenBtn->setCheckable(true);
 
-    ui->exchangeBtn->hide();
+//    ui->exchangeBtn->hide();
 }
 
 void FunctionExchangeWidget::InitStyle()
