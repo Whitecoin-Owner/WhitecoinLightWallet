@@ -63,7 +63,8 @@ ExchangeModePage::ExchangeModePage(QWidget *parent) :
 
     separatorLabel = new QLabel(this);
     separatorLabel->setGeometry(745, 0, 1, this->height());
-    separatorLabel->setStyleSheet("background-color:rgb(209,206,220);border:none;");
+    //separatorLabel->setStyleSheet("background-color:rgb(209,206,220);border:none;");
+    separatorLabel->setStyleSheet("background-color:rgb(220,20,60);border:none;");    
 //    closeKLineWidget = new QLabel(this);
 //    closeKLineWidget->setGeometry(separatorLabel->x(), 0, 120, 30);
 //    closeKLineWidget->setStyleSheet("QLabel{background-color:white;border:1px solid rgb(209,206,220);border-top:none;}");
@@ -94,7 +95,7 @@ ExchangeModePage::~ExchangeModePage()
 {
     delete ui;
 
-    XWCWallet::getInstance()->mainFrame->extendToWidth(770);
+//    XWCWallet::getInstance()->mainFrame->extendToWidth(770);
 
 }
 
@@ -487,15 +488,15 @@ void ExchangeModePage::on_marketBtn1_clicked()
 //    dialog.exec();
 //}
 
-void ExchangeModePage::on_marketBtn3_clicked()
-{
-    ExchangePairSelectDialog dialog("ERCPAX");
-    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::onPairSelected);
-    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::pairChanged);
-    dialog.move(ui->marketBtn3->mapToGlobal( QPoint(ui->marketBtn3->width() / 2 - dialog.width() / 2,ui->marketBtn3->height())));
-
-    dialog.exec();
-}
+//void ExchangeModePage::on_marketBtn3_clicked()
+//{
+//    ExchangePairSelectDialog dialog("ERCPAX");
+//    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::onPairSelected);
+//    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::pairChanged);
+//    dialog.move(ui->marketBtn3->mapToGlobal( QPoint(ui->marketBtn3->width() / 2 - dialog.width() / 2,ui->marketBtn3->height())));
+//
+//    dialog.exec();
+//}
 
 void ExchangeModePage::onPairSelected(const ExchangePair &_pair)
 {
@@ -1032,14 +1033,17 @@ void ExchangeModePage::on_positionComboBox_currentIndexChanged(int index)
 
 void ExchangeModePage::on_KLineBtn_clicked()
 {
-    if(ui->KLineBtn->isChecked())
-    {
-//        Q_EMIT backBtnVisible(true);
+	showKLineWidget();
+}
 
-        showKLineWidget();
-    }
-    else
-    {
-        hideKLineWidget();
-    }
+void ExchangeModePage::showKLineWidget()
+{
+    Q_EMIT backBtnVisible(true);
+
+    KLineWidget* klw = new KLineWidget(this);
+    klw->setAttribute(Qt::WA_DeleteOnClose);
+    //klw->show();
+    //klw->raise();
+
+    klw->hide();
 }
