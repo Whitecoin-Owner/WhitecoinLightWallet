@@ -500,6 +500,9 @@ void ExchangeModePage::on_marketBtn1_clicked()
 
 void ExchangeModePage::onPairSelected(const ExchangePair &_pair)
 {
+    double balance_available_first = 0.0;
+    double balance_available_second = 0.0;
+
     XWCWallet::getInstance()->currentExchangePair = _pair;
     ui->currentPairLabel->setText( QString("%1 / %2").arg(revertERCSymbol(_pair.first)).arg(revertERCSymbol(_pair.second)));
 
@@ -513,8 +516,14 @@ void ExchangeModePage::onPairSelected(const ExchangePair &_pair)
     const ExchangeBalance& assetAmount1 = XWCWallet::getInstance()->assetExchangeBalanceMap.value(_pair.first);
     const ExchangeBalance& assetAmount2 = XWCWallet::getInstance()->assetExchangeBalanceMap.value(_pair.second);
 
-    ui->availableLabel1->setText( QString("%1 %2").arg(getBigNumberString(assetAmount2.available, assetInfo2.precision)).arg(revertERCSymbol( assetInfo2.symbol)));
-    ui->availableLabel2->setText( QString("%1 %2").arg(getBigNumberString(assetAmount1.available, assetInfo1.precision)).arg(revertERCSymbol( assetInfo1.symbol)));
+    balance_available_first = assetAmount1.available / qPow(10,ASSET_PRECISION);
+    balance_available_second = assetAmount2.available ;
+
+    ui->availableLabel1->setText( QString("%1 %2").arg(getBigNumberString(balance_available_second, assetInfo2.precision)).arg(revertERCSymbol( assetInfo2.symbol)));
+    ui->availableLabel2->setText( QString("%1 %2").arg(getBigNumberString(balance_available_first, assetInfo1.precision)).arg(revertERCSymbol( assetInfo1.symbol)));
+
+//  ui->availableLabel1->setText( QString("%1 %2").arg(getBigNumberString(assetAmount2.available, assetInfo2.precision)).arg(revertERCSymbol( assetInfo2.symbol)));
+//  ui->availableLabel2->setText( QString("%1 %2").arg(getBigNumberString(assetAmount1.available, assetInfo1.precision)).arg(revertERCSymbol( assetInfo1.symbol)));
 
     ui->ableToBuyLabel->setText( revertERCSymbol( assetInfo1.symbol));
     ui->ableToSellLabel->setText( revertERCSymbol( assetInfo2.symbol));
@@ -659,6 +668,20 @@ void ExchangeModePage::hideKLineWidget()
     hideSeparator();
 
     ui->KLineBtn->setChecked(false);
+}
+
+// on_accountComboBox_currentIndexChanged is the slot function for accountComboBox
+void ExchangeModePage::on_accountComboBox_currentIndexChanged(const QString &arg1)
+{
+    XWCWallet::getInstance()->currentAccount = ui->accountComboBox->currentText();
+    XWCWallet::getInstance()->assetExchangeBalanceMap.clear();
+
+    ui->buyAmountLineEdit->setEnabled(false);
+    ui->buyPriceLineEdit->setEnabled(false);
+    ui->sellAmountLineEdit->setEnabled(false);
+    ui->sellPriceLineEdit->setEnabled(false);
+
+    getUserBalances();
 }
 
 void ExchangeModePage::onAccountComboBoxCurrentIndexChanged(const QString &arg1)
