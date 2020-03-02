@@ -111,6 +111,8 @@ private:
 public slots:
     void showKLineWidget();
     void hideKLineWidget();
+    void on_accountComboBox_currentIndexChanged(const QString &arg1);
+
 private:
     KLineWidget* klw = nullptr;
 
