@@ -6,6 +6,7 @@
 #include "FeeChooseWidget.h"
 #include "dialog/ErrorResultDialog.h"
 #include "dialog/TransactionResultDialog.h"
+#include <QtCore/qmath.h>
 
 DepositExchangeContractDialog::DepositExchangeContractDialog(bool _isExchangeMode, QWidget *parent) :
     QDialog(parent),
@@ -60,7 +61,15 @@ void DepositExchangeContractDialog::init()
     {
         ui->assetComboBox->addItem( revertERCSymbol( XWCWallet::getInstance()->assetInfoMap.value(assetId).symbol), assetId);
     }
+    
+    QStringList assets = XWCWallet::getInstance()->getAllExchangeAssets();
+    int size = assets.size();
+    for(int i = 0; i < size; i++)
+    {
+        QString symbol = assets.at(i);
+        ui->assetComboBox->addItem( symbol);
 
+    }
 }
 
 void DepositExchangeContractDialog::setCurrentAsset(QString _assetSymbol)
@@ -77,18 +86,64 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
 
         if( result == "\"result\":null")
         {
+
+            QString isExchangeModeString = isExchangeMode ? "EXCHANGE_MODE" : "XWCWallet-GetExchangeContractAddress";
+            
             QString contractAddress = isExchangeMode ? EXCHANGE_MODE_CONTRACT_ADDRESS
                                                      : XWCWallet::getInstance()->getExchangeContractAddress(ui->accountNameLabel->text());
 
             feeChoose->updatePoundageID();
-            XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "transfer_to_contract",
-                                                                                   QJsonArray() << ui->accountNameLabel->text() << contractAddress
-                                                                                   << ui->amountLineEdit->text() << getRealAssetSymbol( ui->assetComboBox->currentText())
-                                                                                   << "deposit to exchange contract"
-                                                                                   << XWCWallet::getInstance()->currentContractFee() << stepCount
-                                                                                   << true
-                                                                                   ));
+            if (ui->assetComboBox->currentText() == "XWC") {
+                XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "transfer_to_contract",
+                                                                                       QJsonArray() << ui->accountNameLabel->text() << contractAddress
+                                                                                       << ui->amountLineEdit->text() << getRealAssetSymbol( ui->assetComboBox->currentText())
+                                                                                       << "deposit to exchange contract"
+                                                                                       << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                                                       << true
+                                                                                       ));
+            }
+            else //这两个是转到合约XDTT WNTT当中去的转完之后还要在XWC Exchange 合约当中调用账目记录 把对应账号的XDTT WNTT给添加进去
+            {
+                if (ui->assetComboBox->currentText() == "XDTT")
+                {
+                    qlonglong tmp = ui->amountLineEdit->text().toInt();
+                    tmp = tmp * qPow(10,ASSET_PRECISION);
+                    /*transactionResultDialog.setInfoText(tr("tmp * qPow(10,ASSET_PRECISION)"));
+                    transactionResultDialog.setDetailText(QString::number(tmp));
+                    transactionResultDialog.pop();*/
 
+                    QString params = QString("%1,%2,%3").arg(EXCHANGE_MODE_XDTT_TOKEN_OFFICIALWALLET).arg(QString::number(tmp)).arg("memo");
+                    /*transactionResultDialog.setInfoText(tr("QString(%1,%2,%3)"));
+                    transactionResultDialog.setDetailText(params);
+                    transactionResultDialog.pop();*/
+
+                    XWCWallet::getInstance()->postRPC( "id-transfer_to_contract_token", toJsonFormat( "invoke_contract",
+                                                         QJsonArray() << ui->accountNameLabel->text()
+                                                         << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                         << EXCHANGE_MODE_XDTT_TOKENCONTRACT_ADDRESS
+                                                         << "transfer"  << params));
+                }
+                else if (ui->assetComboBox->currentText() == "WNTT")
+                {
+                    qlonglong tmp = ui->amountLineEdit->text().toInt();
+                    tmp = tmp * qPow(10,ASSET_PRECISION);
+                    /*transactionResultDialog.setInfoText(tr("tmp * qPow(10,ASSET_PRECISION)"));
+                    transactionResultDialog.setDetailText(QString::number(tmp));
+                    transactionResultDialog.pop();*/
+
+
+                    QString params = QString("%1,%2,%3").arg(EXCHANGE_MODE_WNTT_TOKEN_OFFICIALWALLET).arg(QString::number(tmp)).arg("memo");
+                    /*transactionResultDialog.setInfoText(tr("QString(%1,%2,%3)"));
+                    transactionResultDialog.setDetailText(params);
+                    transactionResultDialog.pop();*/
+
+                    XWCWallet::getInstance()->postRPC( "id-transfer_to_contract_token", toJsonFormat( "invoke_contract",
+                                                         QJsonArray() << ui->accountNameLabel->text()
+                                                         << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                         << EXCHANGE_MODE_WNTT_TOKENCONTRACT_ADDRESS
+                                                         << "transfer"  << params));
+                }
+            }
         }
         else if(result.startsWith("\"error\":"))
         {
@@ -99,20 +154,81 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
         return;
     }
 
-
-    if( id == "id-transfer_to_contract")
+        if( id == "id-transfer_to_contract_token")
     {
+
+        QString contractAddress = isExchangeMode ? EXCHANGE_MODE_CONTRACT_ADDRESS
+                                                 : XWCWallet::getInstance()->getExchangeContractAddress(ui->accountNameLabel->text());
+
+        TransactionResultDialog transactionResultDialog;
+
         QString result = XWCWallet::getInstance()->jsonDataValue(id);
         qDebug() << id << result;
+        /*transactionResultDialog.setInfoText(tr("id-transfer_to_contract_token  result"));
+        transactionResultDialog.setDetailText(result);
+        transactionResultDialog.pop();
+        transactionResultDialog.setInfoText(tr("ui->amountLineEdit->text()"));
+        transactionResultDialog.setDetailText(ui->amountLineEdit->text());
+        transactionResultDialog.pop();*/
 
         if(result.startsWith("\"result\":"))
         {
             close();
 
-            TransactionResultDialog transactionResultDialog;
-            transactionResultDialog.setInfoText(tr("Transaction of deposit has been sent out!"));
-            transactionResultDialog.setDetailText(result);
-            transactionResultDialog.pop();
+            if (ui->assetComboBox->currentText() == "XDTT")
+            {
+                XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "invoke_contract",
+                                                     QJsonArray() << ui->accountNameLabel->text()
+                                                     << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                     << contractAddress
+                                                     << "on_deposit_xdt"  << ui->amountLineEdit->text()));
+
+
+            } else if (ui->assetComboBox->currentText() == "WNTT") {
+                XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "invoke_contract",
+                                                     QJsonArray() << ui->accountNameLabel->text()
+                                                     << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                     << contractAddress
+                                                     << "on_deposit_wnt"  << ui->amountLineEdit->text()));
+
+            }
+
+        }
+        else if(result.startsWith("\"error\":"))
+        {
+            ErrorResultDialog errorResultDialog;
+            errorResultDialog.setInfoText(tr("Fail to deposit to the contract!"));
+            errorResultDialog.setDetailText(result);
+            errorResultDialog.pop();
+
+        }
+
+        return;
+    }
+
+    if( id == "id-transfer_to_contract")
+    {
+        QString result = XWCWallet::getInstance()->jsonDataValue(id);
+        qDebug() << id << result;
+        TransactionResultDialog transactionResultDialog;
+
+        if(result.startsWith("\"result\":"))
+        {
+            close();
+
+            if (ui->assetComboBox->currentText() == "XWC"){
+                transactionResultDialog.setInfoText(tr("XWC Transaction of deposit has been sent out!"));
+                transactionResultDialog.setDetailText(result);
+                transactionResultDialog.pop();
+            } else if (ui->assetComboBox->currentText() == "XDTT") {
+                transactionResultDialog.setInfoText(tr("XDTT Transaction of deposit has been sent out!"));
+                transactionResultDialog.setDetailText(result);
+                transactionResultDialog.pop();
+            } else if (ui->assetComboBox->currentText() == "WNTT") {
+                transactionResultDialog.setInfoText(tr("WNTT Transaction of deposit has been sent out!"));
+                transactionResultDialog.setDetailText(result);
+                transactionResultDialog.pop();
+            }
         }
         else if(result.startsWith("\"error\":"))
         {            
