@@ -58,6 +58,8 @@
 #include "control/CoverWidget.h"
 #include "LightModeConfig.h"
 
+#include "dialog/TransactionResultDialog.h"
+
 Frame::Frame(): timer(NULL),
     firstLogin(NULL),
     normalLogin(NULL),
@@ -2792,6 +2794,53 @@ void Frame::jsonDataUpdated(QString id)
         qDebug() << id << result;
         return;
     }
+	
+    if(id.startsWith("id-invoke_contract_offline-getWithdrawAssetRequests"))
+    {
+        QString result = XWCWallet::getInstance()->jsonDataValue(id);
+//      qDebug() << id << result;
+		TransactionResultDialog transactionResultDialog;
+		
+        if(result.startsWith("\"result\":"))
+        {
+            result.prepend("{");
+            result.append("}");
+
+            QJsonDocument parse_doucment = QJsonDocument::fromJson(result.toLatin1());
+            QString resultStr = parse_doucment.object().value("result").toString();
+			transactionResultDialog.setInfoText(tr("QString resultStr = parse_doucment.object().value(result).toString();"));
+			transactionResultDialog.setDetailText(resultStr);
+			transactionResultDialog.pop();
+			resultStr.remove(0,1);
+			resultStr.remove(resultStr.length()-3,3);
+
+            QStringList resultStrList = resultStr.split("}\",");
+            // for (int i = 0; i < resultStrList.size() ; i ++)
+            // {
+                // transactionResultDialog.setInfoText(tr("Value Result String List"));
+                // transactionResultDialog.setDetailText(resultStrList[i]);
+                // transactionResultDialog.pop();
+            // }
+
+			XWCWallet::getInstance()->withdrawreqlist = resultStrList;
+            
+        }
+    }
+
+    if(id.startsWith("id-removewithdrawassetreq"))
+    {
+        QString result = XWCWallet::getInstance()->jsonDataValue(id);
+		TransactionResultDialog transactionResultDialog;
+		
+        if(result.startsWith("\"result\":"))
+        {
+            TransactionResultDialog transactionResultDialog;
+            transactionResultDialog.setInfoText(tr("Remove withdraw asset request!"));
+            transactionResultDialog.setDetailText(result);
+            transactionResultDialog.pop();
+			
+        }
+    }	
 }
 
 void Frame::onBack()

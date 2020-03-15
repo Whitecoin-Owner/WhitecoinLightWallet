@@ -7,6 +7,7 @@
 #include "AddMyExchangePairsDialog.h"
 #include "control/PriceDepthWidget.h"
 #include "ExchangeBalancesWidget.h"
+#include "ExchangeWithdrawWidget.h"
 #include "ExchangeMyOrdersWidget.h"
 #include "ExchangeContractFeeDialog.h"
 #include "commondialog.h"
@@ -63,7 +64,9 @@ ExchangeModePage::ExchangeModePage(QWidget *parent) :
 
     separatorLabel = new QLabel(this);
     separatorLabel->setGeometry(745, 0, 1, this->height());
-    separatorLabel->setStyleSheet("background-color:rgb(209,206,220);border:none;");
+    //separatorLabel->setStyleSheet("background-color:rgb(209,206,220);border:none;");
+	separatorLabel->setStyleSheet("background-color:rgb(220,20,60);border:none;");
+	
 //    closeKLineWidget = new QLabel(this);
 //    closeKLineWidget->setGeometry(separatorLabel->x(), 0, 120, 30);
 //    closeKLineWidget->setStyleSheet("QLabel{background-color:white;border:1px solid rgb(209,206,220);border-top:none;}");
@@ -94,7 +97,7 @@ ExchangeModePage::~ExchangeModePage()
 {
     delete ui;
 
-    XWCWallet::getInstance()->mainFrame->extendToWidth(770);
+    //XWCWallet::getInstance()->mainFrame->extendToWidth(770);
 
 }
 
@@ -487,15 +490,15 @@ void ExchangeModePage::on_marketBtn1_clicked()
 //    dialog.exec();
 //}
 
-void ExchangeModePage::on_marketBtn3_clicked()
-{
-    ExchangePairSelectDialog dialog("ERCPAX");
-    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::onPairSelected);
-    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::pairChanged);
-    dialog.move(ui->marketBtn3->mapToGlobal( QPoint(ui->marketBtn3->width() / 2 - dialog.width() / 2,ui->marketBtn3->height())));
-
-    dialog.exec();
-}
+//void ExchangeModePage::on_marketBtn3_clicked()
+//{
+//    ExchangePairSelectDialog dialog("ERCPAX");
+//    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::onPairSelected);
+//    connect(&dialog, &ExchangePairSelectDialog::pairSelected, this, &ExchangeModePage::pairChanged);
+//    dialog.move(ui->marketBtn3->mapToGlobal( QPoint(ui->marketBtn3->width() / 2 - dialog.width() / 2,ui->marketBtn3->height())));
+//
+//    dialog.exec();
+//}
 
 void ExchangeModePage::onPairSelected(const ExchangePair &_pair)
 {
@@ -514,7 +517,7 @@ void ExchangeModePage::onPairSelected(const ExchangePair &_pair)
     const AssetInfo& assetInfo2 = XWCWallet::getInstance()->assetInfoMap.value(XWCWallet::getInstance()->getAssetId(_pair.second));
     const ExchangeBalance& assetAmount1 = XWCWallet::getInstance()->assetExchangeBalanceMap.value(_pair.first);
     const ExchangeBalance& assetAmount2 = XWCWallet::getInstance()->assetExchangeBalanceMap.value(_pair.second);
-    
+
     balance_available_first = assetAmount1.available / qPow(10,ASSET_PRECISION);
     balance_available_second = assetAmount2.available ;
 
@@ -633,7 +636,7 @@ void ExchangeModePage::hideSeparator()
 //    closeKLineWidget->hide();
 }
 
-void ExchangeModePage::showKLineWidget()
+void ExchangeModePage::showKLineWidget_____()
 {
     klw = new KLineWidget(this);
     connect(klw, &KLineWidget::pairChanged, this, &ExchangeModePage::onPairSelected);
@@ -699,6 +702,11 @@ void ExchangeModePage::onAccountComboBoxCurrentIndexChanged(const QString &arg1)
 void ExchangeModePage::getUserBalances()
 {
     AccountInfo accountInfo = XWCWallet::getInstance()->accountInfoMap.value(ui->accountComboBox->currentText());
+    //XWCWallet::getInstance()->postRPC( "ExchangeModePage+invoke_contract_offline+getUserBalances+" + ui->accountComboBox->currentText(),
+    //                                 toJsonFormat( "invoke_contract_offline",
+    //                                 QJsonArray() << ui->accountComboBox->currentText() << EXCHANGE_MODE_CONTRACT_ADDRESS
+    //                                               << "getUserBalances"  << accountInfo.address));
+												   
     XWCWallet::getInstance()->postRPC( "ExchangeModePage+invoke_contract_offline+getUserBalances+" + ui->accountComboBox->currentText(),
                                      toJsonFormat( "invoke_contract_offline",
                                      QJsonArray() << ui->accountComboBox->currentText() << EXCHANGE_MODE_CONTRACT_ADDRESS
@@ -1053,6 +1061,20 @@ void ExchangeModePage::on_positionComboBox_currentIndexChanged(int index)
     }
 }
 
+void ExchangeModePage::on_KLineBtn_clicked____()
+{
+    if(ui->KLineBtn->isChecked())
+    {
+//        Q_EMIT backBtnVisible(true);
+
+        showKLineWidget();
+    }
+    else
+    {
+        hideKLineWidget();
+    }
+}
+
 void ExchangeModePage::on_KLineBtn_clicked()
 {
 	showKLineWidget();
@@ -1068,4 +1090,15 @@ void ExchangeModePage::showKLineWidget()
     //klw->raise();
 
     klw->hide();
+}
+void ExchangeModePage::on_withdrawBtn_clicked()
+{
+    hideKLineWidget();
+
+    Q_EMIT backBtnVisible(true);
+
+    ExchangeWithdrawWidget* exchangeWithdrawWidget = new ExchangeWithdrawWidget(this);
+    exchangeWithdrawWidget->setAttribute(Qt::WA_DeleteOnClose);
+    exchangeWithdrawWidget->show();
+    exchangeWithdrawWidget->raise();
 }
