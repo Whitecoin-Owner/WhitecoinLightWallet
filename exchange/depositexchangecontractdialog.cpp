@@ -61,6 +61,13 @@ void DepositExchangeContractDialog::init()
     {
         ui->assetComboBox->addItem( revertERCSymbol( XWCWallet::getInstance()->assetInfoMap.value(assetId).symbol), assetId);
     }
+    
+    QStringList assets = XWCWallet::getInstance()->getAllExchangeAssets();
+    int size = assets.size();
+    for(int i = 0; i < size; i++)
+    {
+        QString symbol = assets.at(i);
+        ui->assetComboBox->addItem( symbol);
 
     QStringList assets = XWCWallet::getInstance()->getAllExchangeAssets();
     int size = assets.size();
@@ -94,6 +101,7 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
 
             feeChoose->updatePoundageID();
             if (ui->assetComboBox->currentText() == "XWC") {
+
             XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "transfer_to_contract",
                                                                                    QJsonArray() << ui->accountNameLabel->text() << contractAddress
                                                                                    << ui->amountLineEdit->text() << getRealAssetSymbol( ui->assetComboBox->currentText())
@@ -101,6 +109,7 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
                                                                                    << XWCWallet::getInstance()->currentContractFee() << stepCount
                                                                                    << true
                                                                                    ));
+
             }
             else //这两个是转到合约XDTT WNTT当中去的转完之后还要在XWC Exchange 合约当中调用账目记录 把对应账号的XDTT WNTT给添加进去
             {
@@ -154,6 +163,7 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
 
         return;
     }
+
 
     if( id == "id-transfer_to_contract_token")
     {

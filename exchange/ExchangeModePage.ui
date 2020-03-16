@@ -1075,6 +1075,7 @@ font:12px &quot;微软雅黑 Light&quot;;</string>
   <zorder>title_label</zorder>
   <zorder>widget</zorder>
   <zorder>marketBtn1</zorder>
+//  <zorder>marketBtn3</zorder>
   <zorder>favoriteMarketBtn</zorder>
   <zorder>widget2</zorder>
   <zorder>positionComboBox</zorder>
@@ -1098,6 +1099,7 @@ font:12px &quot;微软雅黑 Light&quot;;</string>
   <tabstop>myOrdersBtn</tabstop>
   <tabstop>marketBtn1</tabstop>
   <tabstop>favoriteMarketBtn</tabstop>
+//  <tabstop>marketBtn3</tabstop>
   <tabstop>sellPositionTableWidget</tabstop>
   <tabstop>buyBtn</tabstop>
   <tabstop>sellBtn</tabstop>

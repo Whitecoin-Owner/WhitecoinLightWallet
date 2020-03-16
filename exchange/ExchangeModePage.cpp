@@ -65,8 +65,9 @@ ExchangeModePage::ExchangeModePage(QWidget *parent) :
     separatorLabel = new QLabel(this);
     separatorLabel->setGeometry(745, 0, 1, this->height());
     //separatorLabel->setStyleSheet("background-color:rgb(209,206,220);border:none;");
-	separatorLabel->setStyleSheet("background-color:rgb(220,20,60);border:none;");
+  	separatorLabel->setStyleSheet("background-color:rgb(220,20,60);border:none;");
 	
+
 //    closeKLineWidget = new QLabel(this);
 //    closeKLineWidget->setGeometry(separatorLabel->x(), 0, 120, 30);
 //    closeKLineWidget->setStyleSheet("QLabel{background-color:white;border:1px solid rgb(209,206,220);border-top:none;}");
@@ -97,7 +98,9 @@ ExchangeModePage::~ExchangeModePage()
 {
     delete ui;
 
-    //XWCWallet::getInstance()->mainFrame->extendToWidth(770);
+
+//    XWCWallet::getInstance()->mainFrame->extendToWidth(770);
+
 
 }
 
@@ -1063,16 +1066,19 @@ void ExchangeModePage::on_positionComboBox_currentIndexChanged(int index)
 
 void ExchangeModePage::on_KLineBtn_clicked____()
 {
-    if(ui->KLineBtn->isChecked())
-    {
-//        Q_EMIT backBtnVisible(true);
+	showKLineWidget();
+}
 
-        showKLineWidget();
-    }
-    else
-    {
-        hideKLineWidget();
-    }
+void ExchangeModePage::showKLineWidget()
+{
+    Q_EMIT backBtnVisible(true);
+
+    KLineWidget* klw = new KLineWidget(this);
+    klw->setAttribute(Qt::WA_DeleteOnClose);
+    //klw->show();
+    //klw->raise();
+
+    klw->hide();
 }
 
 void ExchangeModePage::on_KLineBtn_clicked()
