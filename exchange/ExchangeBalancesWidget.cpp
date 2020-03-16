@@ -48,6 +48,7 @@ void ExchangeBalancesWidget::showBalances()
     QStringList assets = XWCWallet::getInstance()->getAllExchangeAssets();
     double balance_locked = 0.0;
     double balance_available = 0.0;
+
     int size = assets.size();
     ui->balancesTableWidget->setRowCount(0);
     ui->balancesTableWidget->setRowCount(size);
@@ -64,20 +65,7 @@ void ExchangeBalancesWidget::showBalances()
 
         balance_locked = balance.locked / qPow(10,ASSET_PRECISION);
         balance_available = balance.available / qPow(10,ASSET_PRECISION);
-
-        /*TransactionResultDialog transactionResultDialog;
-        transactionResultDialog.setInfoText(tr("Show the Asset balance.available in the table getBigNumberString"));
-        transactionResultDialog.setDetailText(getBigNumberString( balance_available, assetInfo.precision));
-        transactionResultDialog.setInfoText(tr("Show the Asset balance.available in the table"));
-        transactionResultDialog.setDetailText(QString::number(balance_available));
-        transactionResultDialog.pop();
-        transactionResultDialog.setInfoText(tr("Show the Asset balance.locked in the table getBigNumberString"));
-        transactionResultDialog.setDetailText(getBigNumberString( balance_locked, assetInfo.precision));
-        transactionResultDialog.setInfoText(tr("Show the Asset balance.locked in the table"));
-        transactionResultDialog.setDetailText(QString::number(balance_locked));
-        transactionResultDialog.pop();*/
-
-
+        
         //ui->balancesTableWidget->setItem( i, 1, new QTableWidgetItem( getBigNumberString( balance.available, assetInfo.precision)));
         //ui->balancesTableWidget->setItem( i, 2, new QTableWidgetItem( getBigNumberString( balance.locked, assetInfo.precision)));
         ui->balancesTableWidget->setItem( i, 1, new QTableWidgetItem( QString::number(balance_available)));

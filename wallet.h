@@ -52,7 +52,7 @@
 #define EXCHANGE_MODE_CONTRACT_ADDRESS  "XWCCbXhiANMHKGmJqN5TBxmTs3sfq3UGnonFf"
 #else
 #define LOCKFUND_CONTRACT_ADDRESS  "XWCCPHA7vA91zV6r7iJ8oadFgj97PHAy3dKRa"
-#define EXCHANGE_MODE_CONTRACT_ADDRESS  "XWCCK9EPizyZRht52noQZbVPhy34x8rMjTyRZ"  // 交易所模式合约地址
+#define EXCHANGE_MODE_CONTRACT_ADDRESS  "XWCCTUV9CiHBnRcSgnRjmr7ERNQeJVMNfgmzY"  //1.2.3 交易所模式合约地址 1.2.2 XWCCK9EPizyZRht52noQZbVPhy34x8rMjTyRZ
 #endif
 
 #define EXCHANGE_MODE_XDTT_TOKENCONTRACT_ADDRESS  "XWCCX6BEcadfEjNQL9eqky8y35Bdg2ZUfjTDK"  // XDTT Token Contract Address
@@ -560,6 +560,9 @@ public:
     int getExchangePairPrecision(const ExchangePair& pair);    // 返回交易对显示价格时的小数位数
     int getExchangeAmountPrecision(QString assetSymbol);
     QStringList getAllExchangeAssets();
+    QStringList getWithdrawList();
+    QStringList withdrawreqlist;
+	
     QMap<ExchangePair,PairInfo> pairInfoMap;
     QList<ExchangePair> getExchangePairsByQuoteAsset(QString quoteAssetSymbol = "");    // 如果为空 返回所有状态为COMMON的交易对
     bool isMyFavoritePair(const ExchangePair& pair);

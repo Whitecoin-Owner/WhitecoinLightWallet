@@ -25,7 +25,9 @@ void FunctionExchangeWidget::retranslator()
 void FunctionExchangeWidget::DefaultShow()
 {
     on_exchangeBtn_clicked();
+
 //    on_onchainOrderBtn_clicked();
+
 }
 
 void FunctionExchangeWidget::InitWidget()

@@ -73,7 +73,7 @@ private slots:
     void on_positionComboBox_currentIndexChanged(int index);
 
     void on_KLineBtn_clicked();
-
+	void on_KLineBtn_clicked____();
 public:
     void getUserBalances();
 
@@ -104,12 +104,17 @@ private:
 private slots:
     void showSeparator();
     void hideSeparator();
+    void on_accountComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_withdrawBtn_clicked();
+
 private:
     QLabel* separatorLabel = nullptr;
     QLabel* closeKLineWidget = nullptr;
 
 public slots:
     void showKLineWidget();
+    void showKLineWidget_____();
     void hideKLineWidget();
     void on_accountComboBox_currentIndexChanged(const QString &arg1);
 

@@ -60,6 +60,15 @@ void WithdrawExchangeContractDialog::init()
         ui->assetComboBox->addItem( revertERCSymbol( XWCWallet::getInstance()->assetInfoMap.value(assetId).symbol), assetId);
     }
 
+    QStringList assets = XWCWallet::getInstance()->getAllExchangeAssets();
+    int size = assets.size();
+    for(int i = 0; i < size; i++)
+    {
+        QString symbol = assets.at(i);
+        ui->assetComboBox->addItem( symbol);
+
+    }
+	
     ui->exchangeTipLabel->setVisible(isExchangeMode);
 }
 
@@ -78,7 +87,8 @@ void WithdrawExchangeContractDialog::jsonDataUpdated(QString id)
 
         if( result == "\"result\":null")
         {
-            AssetInfo assetInfo = XWCWallet::getInstance()->assetInfoMap.value(XWCWallet::getInstance()->getAssetId( getRealAssetSymbol( ui->assetComboBox->currentText())));
+/*       
+			AssetInfo assetInfo = XWCWallet::getInstance()->assetInfoMap.value(XWCWallet::getInstance()->getAssetId( getRealAssetSymbol( ui->assetComboBox->currentText())));
             QString contractAddress = isExchangeMode ? EXCHANGE_MODE_CONTRACT_ADDRESS
                                                      : XWCWallet::getInstance()->getExchangeContractAddress(ui->accountNameLabel->text());
             QString func = isExchangeMode ? "withdraw" : "withdrawAsset";
@@ -91,7 +101,33 @@ void WithdrawExchangeContractDialog::jsonDataUpdated(QString id)
                                                                                    QJsonArray() << ui->accountNameLabel->text()
                                                                                    << XWCWallet::getInstance()->currentContractFee() << stepCount
                                                                                    << contractAddress
-                                                                                   << func  << params));
+																				   << func  << params));
+*/
+			AssetInfo assetInfo = XWCWallet::getInstance()->assetInfoMap.value(XWCWallet::getInstance()->getAssetId( getRealAssetSymbol( ui->assetComboBox->currentText())));
+            QString contractAddress = EXCHANGE_MODE_CONTRACT_ADDRESS;
+            QString func = "on_setWithdrawAsset";
+ 
+            QString params = QString("%1,%2").arg(getRealAssetSymbol( ui->assetComboBox->currentText())).arg(decimalToIntegerStr(ui->amountLineEdit->text(), assetInfo.precision));
+
+        TransactionResultDialog transactionResultDialog;
+        transactionResultDialog.setInfoText(tr("on_setWithdrawAsset Parameter QString(\"%1,%2\")"));
+        transactionResultDialog.setDetailText(params);
+
+        transactionResultDialog.setInfoText(tr("Command"));
+        transactionResultDialog.setDetailText(toJsonFormat( "invoke_contract",QJsonArray() << ui->accountNameLabel->text()
+                                                                                   << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                                                   << contractAddress
+																				   << func  << params));
+
+        transactionResultDialog.pop();
+
+
+            XWCWallet::getInstance()->postRPC( "id-invoke_contract-withdrawAsset", toJsonFormat( "invoke_contract",
+                                                                                   QJsonArray() << ui->accountNameLabel->text()
+                                                                                   << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                                                   << contractAddress
+																				   << func  << params));
+                                                                                 
         }
         else if(result.startsWith("\"error\":"))
         {

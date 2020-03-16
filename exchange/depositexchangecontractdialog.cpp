@@ -69,6 +69,13 @@ void DepositExchangeContractDialog::init()
         QString symbol = assets.at(i);
         ui->assetComboBox->addItem( symbol);
 
+    QStringList assets = XWCWallet::getInstance()->getAllExchangeAssets();
+    int size = assets.size();
+    for(int i = 0; i < size; i++)
+    {
+        QString symbol = assets.at(i);
+        ui->assetComboBox->addItem( symbol);
+
     }
 }
 
@@ -88,19 +95,21 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
         {
 
             QString isExchangeModeString = isExchangeMode ? "EXCHANGE_MODE" : "XWCWallet-GetExchangeContractAddress";
-            
+
             QString contractAddress = isExchangeMode ? EXCHANGE_MODE_CONTRACT_ADDRESS
                                                      : XWCWallet::getInstance()->getExchangeContractAddress(ui->accountNameLabel->text());
 
             feeChoose->updatePoundageID();
             if (ui->assetComboBox->currentText() == "XWC") {
-                XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "transfer_to_contract",
-                                                                                       QJsonArray() << ui->accountNameLabel->text() << contractAddress
-                                                                                       << ui->amountLineEdit->text() << getRealAssetSymbol( ui->assetComboBox->currentText())
-                                                                                       << "deposit to exchange contract"
-                                                                                       << XWCWallet::getInstance()->currentContractFee() << stepCount
-                                                                                       << true
-                                                                                       ));
+
+            XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "transfer_to_contract",
+                                                                                   QJsonArray() << ui->accountNameLabel->text() << contractAddress
+                                                                                   << ui->amountLineEdit->text() << getRealAssetSymbol( ui->assetComboBox->currentText())
+                                                                                   << "deposit to exchange contract"
+                                                                                   << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                                                   << true
+                                                                                   ));
+
             }
             else //这两个是转到合约XDTT WNTT当中去的转完之后还要在XWC Exchange 合约当中调用账目记录 把对应账号的XDTT WNTT给添加进去
             {
@@ -144,6 +153,7 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
                                                          << "transfer"  << params));
                 }
             }
+
         }
         else if(result.startsWith("\"error\":"))
         {
@@ -154,7 +164,8 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
         return;
     }
 
-        if( id == "id-transfer_to_contract_token")
+
+    if( id == "id-transfer_to_contract_token")
     {
 
         QString contractAddress = isExchangeMode ? EXCHANGE_MODE_CONTRACT_ADDRESS
@@ -229,6 +240,7 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
                 transactionResultDialog.setDetailText(result);
                 transactionResultDialog.pop();
             }
+
         }
         else if(result.startsWith("\"error\":"))
         {            
