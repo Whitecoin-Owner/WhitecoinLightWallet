@@ -246,7 +246,8 @@ SOURCES += main.cpp\
     control/CommonControl.cpp \
     miner/TotalLockedDialog.cpp \
     extra/OldRpcAdapter.cpp \
-    LightModeConfig.cpp
+    LightModeConfig.cpp \
+    exchange/ExchangeWithdrawWidget.cpp
 
 
 HEADERS  += firstlogin.h \
@@ -439,7 +440,8 @@ HEADERS  += firstlogin.h \
     control/CommonControl.h \
     miner/TotalLockedDialog.h \
     extra/OldRpcAdapter.h \
-    LightModeConfig.h
+    LightModeConfig.h \
+    exchange/ExchangeWithdrawWidget.h
 
 FORMS    += firstlogin.ui \
     normallogin.ui \
@@ -592,7 +594,8 @@ FORMS    += firstlogin.ui \
     citizen/CitizenResolutionDialog.ui \
     control/CoverWidget.ui \
     miner/TotalLockedDialog.ui \
-    LightModeConfig.ui
+    LightModeConfig.ui \
+    exchange/ExchangeWithdrawWidget.ui
 
 win32{
     DISTFILES += logo.rc

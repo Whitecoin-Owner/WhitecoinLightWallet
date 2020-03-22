@@ -107,8 +107,16 @@ void WithdrawExchangeContractDialog::jsonDataUpdated(QString id)
             QString contractAddress = EXCHANGE_MODE_CONTRACT_ADDRESS;
             QString func = "on_setWithdrawAsset";
  
-            QString params = QString("%1,%2").arg(getRealAssetSymbol( ui->assetComboBox->currentText())).arg(decimalToIntegerStr(ui->amountLineEdit->text(), assetInfo.precision));
+            //这里精度XDTT WNTT都没有定义，暂时全部取10^8。以后再根据不同币种添加
+            //TransactionResultDialog transactionResultDialog;
+            //transactionResultDialog.setInfoText(tr("assetInfo.precision"));
+            //transactionResultDialog.setDetailText(QString::number(assetInfo.precision));
+            //transactionResultDialog.pop();
+            //QString params = QString("%1,%2").arg(getRealAssetSymbol( ui->assetComboBox->currentText())).arg(decimalToIntegerStr(ui->amountLineEdit->text(), assetInfo.precision));
+            QString params = QString("%1,%2").arg(getRealAssetSymbol( ui->assetComboBox->currentText())).arg(decimalToIntegerStr(ui->amountLineEdit->text(), ASSET_PRECISION));
 
+
+/*
         TransactionResultDialog transactionResultDialog;
         transactionResultDialog.setInfoText(tr("on_setWithdrawAsset Parameter QString(\"%1,%2\")"));
         transactionResultDialog.setDetailText(params);
@@ -120,7 +128,7 @@ void WithdrawExchangeContractDialog::jsonDataUpdated(QString id)
 																				   << func  << params));
 
         transactionResultDialog.pop();
-
+*/
 
             XWCWallet::getInstance()->postRPC( "id-invoke_contract-withdrawAsset", toJsonFormat( "invoke_contract",
                                                                                    QJsonArray() << ui->accountNameLabel->text()
@@ -146,11 +154,12 @@ void WithdrawExchangeContractDialog::jsonDataUpdated(QString id)
         if(result.startsWith("\"result\":"))
         {
             close();
-
+/*
             TransactionResultDialog transactionResultDialog;
             transactionResultDialog.setInfoText(tr("Transaction of withdraw-balance from the exchange contract has been sent out!"));
             transactionResultDialog.setDetailText(result);
             transactionResultDialog.pop();
+*/
         }
         else if(result.startsWith("\"error\":"))
         {   
