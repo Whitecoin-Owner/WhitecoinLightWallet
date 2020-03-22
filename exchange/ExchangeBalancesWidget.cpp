@@ -48,7 +48,7 @@ void ExchangeBalancesWidget::showBalances()
     QStringList assets = XWCWallet::getInstance()->getAllExchangeAssets();
     double balance_locked = 0.0;
     double balance_available = 0.0;
- 
+
     int size = assets.size();
     ui->balancesTableWidget->setRowCount(0);
     ui->balancesTableWidget->setRowCount(size);
@@ -62,9 +62,9 @@ void ExchangeBalancesWidget::showBalances()
 
         const AssetInfo& assetInfo = XWCWallet::getInstance()->assetInfoMap.value( XWCWallet::getInstance()->getAssetId(symbol));
         ExchangeBalance balance = XWCWallet::getInstance()->assetExchangeBalanceMap.value(symbol);
+
         balance_locked = balance.locked / qPow(10,ASSET_PRECISION);
         balance_available = balance.available / qPow(10,ASSET_PRECISION);
- 
         
         //ui->balancesTableWidget->setItem( i, 1, new QTableWidgetItem( getBigNumberString( balance.available, assetInfo.precision)));
         //ui->balancesTableWidget->setItem( i, 2, new QTableWidgetItem( getBigNumberString( balance.locked, assetInfo.precision)));

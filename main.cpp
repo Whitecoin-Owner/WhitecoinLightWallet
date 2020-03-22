@@ -1,4 +1,4 @@
-﻿#include <QApplication>
+#include <QApplication>
 
 #ifdef WIN32
 #include <windows.h>
