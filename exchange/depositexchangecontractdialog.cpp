@@ -115,16 +115,18 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
             {
                 if (ui->assetComboBox->currentText() == "XDTT")
                 {
-                    qlonglong tmp = ui->amountLineEdit->text().toInt();
+                    //qlonglong tmp = ui->amountLineEdit->text().toInt();
+                    double tmp = ui->amountLineEdit->text().toDouble();
                     tmp = tmp * qPow(10,ASSET_PRECISION);
+
                     /*transactionResultDialog.setInfoText(tr("tmp * qPow(10,ASSET_PRECISION)"));
                     transactionResultDialog.setDetailText(QString::number(tmp));
                     transactionResultDialog.pop();*/
 
-                    QString params = QString("%1,%2,%3").arg(EXCHANGE_MODE_XDTT_TOKEN_OFFICIALWALLET).arg(QString::number(tmp)).arg("memo");
-                    /*transactionResultDialog.setInfoText(tr("QString(%1,%2,%3)"));
-                    transactionResultDialog.setDetailText(params);
-                    transactionResultDialog.pop();*/
+                    QString params = QString("%1,%2,%3").arg(EXCHANGE_MODE_XDTT_TOKEN_OFFICIALWALLET).arg(QString::number(tmp,10,8)).arg("memo");
+                    //transactionResultDialog.setInfoText(tr("QString(%1,%2,%3)"));
+                    //transactionResultDialog.setDetailText(params);
+                    //transactionResultDialog.pop();
 
                     XWCWallet::getInstance()->postRPC( "id-transfer_to_contract_token", toJsonFormat( "invoke_contract",
                                                          QJsonArray() << ui->accountNameLabel->text()
@@ -134,17 +136,18 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
                 }
                 else if (ui->assetComboBox->currentText() == "WNTT")
                 {
-                    qlonglong tmp = ui->amountLineEdit->text().toInt();
+                    //qlonglong tmp = ui->amountLineEdit->text().toInt();
+                    double tmp = ui->amountLineEdit->text().toDouble();
                     tmp = tmp * qPow(10,ASSET_PRECISION);
                     /*transactionResultDialog.setInfoText(tr("tmp * qPow(10,ASSET_PRECISION)"));
                     transactionResultDialog.setDetailText(QString::number(tmp));
                     transactionResultDialog.pop();*/
 
 
-                    QString params = QString("%1,%2,%3").arg(EXCHANGE_MODE_WNTT_TOKEN_OFFICIALWALLET).arg(QString::number(tmp)).arg("memo");
-                    /*transactionResultDialog.setInfoText(tr("QString(%1,%2,%3)"));
-                    transactionResultDialog.setDetailText(params);
-                    transactionResultDialog.pop();*/
+                    QString params = QString("%1,%2,%3").arg(EXCHANGE_MODE_WNTT_TOKEN_OFFICIALWALLET).arg(QString::number(tmp,10,8)).arg("memo");
+//                    transactionResultDialog.setInfoText(tr("QString(%1,%2,%3)"));
+//                    transactionResultDialog.setDetailText(params);
+//                    transactionResultDialog.pop();
 
                     XWCWallet::getInstance()->postRPC( "id-transfer_to_contract_token", toJsonFormat( "invoke_contract",
                                                          QJsonArray() << ui->accountNameLabel->text()

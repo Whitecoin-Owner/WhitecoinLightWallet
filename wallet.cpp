@@ -2364,8 +2364,9 @@ QString toEasyRead(unsigned long long number, int precision, int effectiveBitsNu
 
 QStringList XWCWallet::getWithdrawList()
 {
-    QStringList result;
-    return XWCWallet::getInstance()->withdrawreqlist;
+    QStringList resultlist = XWCWallet::getInstance()->withdrawreqlist;
+
+    return resultlist;
 
 }
 

@@ -2808,20 +2808,31 @@ void Frame::jsonDataUpdated(QString id)
 
             QJsonDocument parse_doucment = QJsonDocument::fromJson(result.toLatin1());
             QString resultStr = parse_doucment.object().value("result").toString();
-			transactionResultDialog.setInfoText(tr("QString resultStr = parse_doucment.object().value(result).toString();"));
-			transactionResultDialog.setDetailText(resultStr);
-			transactionResultDialog.pop();
-			resultStr.remove(0,1);
-			resultStr.remove(resultStr.length()-3,3);
 
-            QStringList resultStrList = resultStr.split("}\",");
-            // for (int i = 0; i < resultStrList.size() ; i ++)
-            // {
-                // transactionResultDialog.setInfoText(tr("Value Result String List"));
-                // transactionResultDialog.setDetailText(resultStrList[i]);
-                // transactionResultDialog.pop();
-            // }
+            //transactionResultDialog.setInfoText(tr("QString resultStr = parse_doucment.object().value(result).toString();"));
+            //transactionResultDialog.setDetailText(resultStr);
+            //transactionResultDialog.pop();
+            QStringList resultStrList;
 
+            if (resultStr != "[]")
+            {
+                resultStr.remove(0,1);
+                resultStr.remove(resultStr.length()-3,3);
+
+                resultStrList = resultStr.split("}\",");
+                for (int i = 0; i < resultStrList.size() ; i ++)
+                {
+                    resultStrList[i].append("}");
+//                    transactionResultDialog.setInfoText(tr("resultStr is not empty!"));
+//                    transactionResultDialog.setDetailText(resultStrList[i]);
+//                    transactionResultDialog.pop();
+                }
+            } else {
+//                transactionResultDialog.setInfoText(tr("resultStr is []!"));
+//                transactionResultDialog.setDetailText(resultStr);
+//                transactionResultDialog.pop();
+                resultStrList.clear();
+            }
 			XWCWallet::getInstance()->withdrawreqlist = resultStrList;
             
         }
@@ -2833,12 +2844,13 @@ void Frame::jsonDataUpdated(QString id)
 		TransactionResultDialog transactionResultDialog;
 		
         if(result.startsWith("\"result\":"))
-        {
+        {   
+/*	
             TransactionResultDialog transactionResultDialog;
             transactionResultDialog.setInfoText(tr("Remove withdraw asset request!"));
             transactionResultDialog.setDetailText(result);
             transactionResultDialog.pop();
-			
+*/			
         }
     }	
 }
