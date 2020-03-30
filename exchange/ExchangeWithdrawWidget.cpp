@@ -39,10 +39,6 @@ ExchangeWithdrawWidget::~ExchangeWithdrawWidget()
 void ExchangeWithdrawWidget::init()
 {
     TransactionResultDialog transactionResultDialog;
-    //transactionResultDialog.setInfoText(tr("Enter ExchangeWithdrawWidget init()"));
-    //transactionResultDialog.pop();
-
-
     QStringList accounts = XWCWallet::getInstance()->accountInfoMap.keys();
     ui->accountComboBox->addItems(accounts);
 //    connect( ui->accountComboBox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onAccountComboBoxCurrentIndexChanged(const QString &)));
@@ -62,7 +58,7 @@ void ExchangeWithdrawWidget::init()
                                                                                    << contractAddress
 																				   << func  << params)); 
 																				   
-    showWithdrawList();
+	showWithdrawList();
 }
 
 void ExchangeWithdrawWidget::showWithdrawList()
@@ -76,91 +72,25 @@ void ExchangeWithdrawWidget::showWithdrawList()
     int size = withdrawlist.length();
     int loopindex = 0;
     int account_rowlength = 0;
-
-    //transactionResultDialog.setInfoText(tr("Get withdrawlist !"));
-    //transactionResultDialog.pop();
-
-//    transactionResultDialog.setInfoText(tr("size"));
-//    transactionResultDialog.setDetailText(QString::number(size));
-//    transactionResultDialog.pop();
-
     if (!listEmpty)
     {
-        //transactionResultDialog.setInfoText(tr("QString List is not empty! size: "));
-        //transactionResultDialog.setDetailText(QString::number(size));
-        //transactionResultDialog.pop();
+	ui->withdrawTableWidget->setRowCount(0);
+    ui->withdrawTableWidget->setRowCount(size);
 
-        ui->withdrawTableWidget->setRowCount(0);        
-        ui->withdrawTableWidget->setRowCount(size);
+    for(int i = 0; i < size; i++)
+    {
+        // transactionResultDialog.setInfoText(tr("Loop Index "));
+        // transactionResultDialog.setDetailText(QString::number(i));
+        // transactionResultDialog.pop();
 
-        for(int i = 0; i < size; i++)
-        {
-            transactionResultDialog.setInfoText(tr("Loop Index "));
-            transactionResultDialog.setDetailText(QString::number(i));
-            transactionResultDialog.pop();
+        // transactionResultDialog.setInfoText(tr("Value Result String List"));
+        // transactionResultDialog.setDetailText(withdrawlist[i]);
+        // transactionResultDialog.pop();
 
-            transactionResultDialog.setInfoText(tr("Value Result String List"));
-            transactionResultDialog.setDetailText(withdrawlist[i]);
-            transactionResultDialog.pop();
+        QString withdrawListString = withdrawlist[i];
+        QStringList withdrawStrList = withdrawListString.split(":");
 
-            QString withdrawListString = withdrawlist[i];
-            QStringList withdrawStrList = withdrawListString.split(":");
-
-            transactionResultDialog.setInfoText(tr("withdrawStrList[0]"));
-            transactionResultDialog.setDetailText(withdrawStrList[0]);
-            transactionResultDialog.pop();
-/*
-            //Assign Index
-            QString index = withdrawStrList[0];
-            index = index.remove("\"");
-            index = index.remove("{");
-            //transactionResultDialog.setInfoText(tr("index"));
-            //transactionResultDialog.setDetailText(index);
-            //transactionResultDialog.pop();
-
-            //Assign address
-            QString address = withdrawStrList[1];
-            //transactionResultDialog.setInfoText(tr("withdrawStrList[0]"));
-            //transactionResultDialog.setDetailText(withdrawStrList[0]);
-            //transactionResultDialog.pop();
-            address = address.remove("\"");
-            address = address.remove("{");
-            //transactionResultDialog.setInfoText(tr("address"));
-            //transactionResultDialog.setDetailText(address);
-            //transactionResultDialog.pop();
-            //Assign asset
-            QStringList withdrawStrList2 = withdrawStrList[3].split(",");
-            QString asset = withdrawStrList2[0];
-            //transactionResultDialog.setInfoText(tr("withdrawStrList[2]"));
-            //transactionResultDialog.setDetailText(withdrawStrList[2]);
-            //transactionResultDialog.pop();
-            asset = asset.remove("\"");
-            //transactionResultDialog.setInfoText(tr("asset"));
-            //transactionResultDialog.setDetailText(asset);
-            //transactionResultDialog.pop();
-            //Assign amount
-            //transactionResultDialog.setInfoText(tr("withdrawStrList[3]"));
-            //transactionResultDialog.setDetailText(withdrawStrList[3]);
-            //transactionResultDialog.pop();
-            withdrawStrList2 = withdrawStrList[4].split(",");
-            QString amount = withdrawStrList2[0];
-            //transactionResultDialog.setInfoText(tr("amount"));
-            //transactionResultDialog.setDetailText(amount);
-            //transactionResultDialog.pop();
-            int amount_int = amount.toInt();
-            double amount_double = amount_int / qPow(10,ASSET_PRECISION);;
-            amount = QString("%1").arg(amount_double);
-            //Assign status
-            //transactionResultDialog.setInfoText(tr("withdrawStrList[4]"));
-            //transactionResultDialog.setDetailText(withdrawStrList[4]);
-            //transactionResultDialog.pop();
-            QString status = withdrawStrList[5];
-            status = status.remove("\"");
-            status = status.remove("}");            
-            //transactionResultDialog.setInfoText(tr("status"));
-            //transactionResultDialog.setDetailText(status);
-            //transactionResultDialog.pop();
-*/
+		//Assign Index
             QString index ;//= withdrawStrList[0];
             QString address ;//= withdrawStrList[1];
             QStringList withdrawStrList2;// = withdrawStrList[3].split(",");
@@ -168,15 +98,9 @@ void ExchangeWithdrawWidget::showWithdrawList()
             QString asset ;//= withdrawStrList2[0];
             QString amount ;//= withdrawStrList2[0];
             QString status ;//= withdrawStrList[5];
-
             QString withdrawStrList_ana = withdrawStrList[0];
             withdrawStrList_ana = withdrawStrList_ana.remove("\"");
             withdrawStrList_ana = withdrawStrList_ana.remove("{");
-
-            transactionResultDialog.setInfoText(tr("withdrawStrList_ana"));
-            transactionResultDialog.setDetailText(withdrawStrList_ana);
-            transactionResultDialog.pop();
-
             if (withdrawStrList_ana.startsWith("XWC"))
             {
                 index = "Nil";
@@ -191,7 +115,6 @@ void ExchangeWithdrawWidget::showWithdrawList()
                 withdrawStrList3 = withdrawStrList[4].split(",");
                 status = withdrawStrList[5];
             }
-
             //Assign Index
             index = index.remove("\"");
             index = index.remove("{");
@@ -209,56 +132,19 @@ void ExchangeWithdrawWidget::showWithdrawList()
             //Assign status
             status = status.remove("\"");
             status = status.remove("}");
-/*
-            transactionResultDialog.setInfoText(tr("index"));
-            transactionResultDialog.setDetailText(index);
-            transactionResultDialog.pop();
-            transactionResultDialog.setInfoText(tr("address"));
-            transactionResultDialog.setDetailText(address);
-            transactionResultDialog.pop();
-            transactionResultDialog.setInfoText(tr("asset"));
-            transactionResultDialog.setDetailText(asset);
-            transactionResultDialog.pop();
-            transactionResultDialog.setInfoText(tr("amount"));
-            transactionResultDialog.setDetailText(amount);
-            transactionResultDialog.pop();
-            transactionResultDialog.setInfoText(tr("status"));
-            transactionResultDialog.setDetailText(status);
-            transactionResultDialog.pop();
-*/
             AccountInfo accountInfo = XWCWallet::getInstance()->accountInfoMap.value(ui->accountComboBox->currentText());
             QString currentAccountAddr = accountInfo.address;
-/*
-            TransactionResultDialog transactionResultDialog;
-            transactionResultDialog.setInfoText(tr("currentAccountAddr"));
-            transactionResultDialog.setDetailText(currentAccountAddr);
-            transactionResultDialog.pop();
-            transactionResultDialog.setInfoText(tr("address"));
-            transactionResultDialog.setDetailText(address);
-            transactionResultDialog.pop();
-            transactionResultDialog.setInfoText(tr("EXCHANGE_MODE_WITHDRAW_ADMIN_ADDRESS"));
-            transactionResultDialog.setDetailText(EXCHANGE_MODE_WITHDRAW_ADMIN_ADDRESS);
-            transactionResultDialog.pop();
-*/
             if (currentAccountAddr == address || currentAccountAddr == EXCHANGE_MODE_WITHDRAW_ADMIN_ADDRESS)
             {
-            /*
-                transactionResultDialog.setInfoText(tr("1"));
-                transactionResultDialog.setDetailText(EXCHANGE_MODE_WITHDRAW_ADMIN_ADDRESS);
-                transactionResultDialog.pop();
-                transactionResultDialog.setInfoText(tr("loopindex"));
-                transactionResultDialog.setDetailText(QString::number(loopindex));
-                transactionResultDialog.pop();
-            */
                 ui->withdrawTableWidget->setRowHeight( loopindex, 42);
                 ui->withdrawTableWidget->setItem( loopindex, 0, new QTableWidgetItem(asset));
                 ui->withdrawTableWidget->setItem( loopindex, 1, new QTableWidgetItem(amount));
                 ui->withdrawTableWidget->setItem( loopindex, 2, new QTableWidgetItem(status));
                 ui->withdrawTableWidget->setItem( loopindex, 3, new QTableWidgetItem(tr("approve")));
                 ui->withdrawTableWidget->setItem( loopindex, 4, new QTableWidgetItem(address));
-            // ui->withdrawTableWidget->setItem( i, 3, new QTableWidgetItem( tr("deposit")));
-            // ui->withdrawTableWidget->setItem( i, 4, new QTableWidgetItem( tr("withdraw")));
-            // ui->withdrawTableWidget->setItem( i, 5, new QTableWidgetItem( tr("history")));
+        // ui->withdrawTableWidget->setItem( i, 4, new QTableWidgetItem( tr("withdraw")));
+        // ui->withdrawTableWidget->setItem( i, 5, new QTableWidgetItem( tr("history")));
+
 
                 AssetIconItem* assetIconItem = new AssetIconItem();
                 assetIconItem->setAsset(ui->withdrawTableWidget->item(loopindex,0)->text());
@@ -289,14 +175,7 @@ void ExchangeWithdrawWidget::showWithdrawList()
         }
     } else {
         ui->withdrawTableWidget->setRowCount(0);
-        transactionResultDialog.setInfoText(tr("QString List is empty! Size: "));
-        transactionResultDialog.setDetailText(QString::number(size));
-        transactionResultDialog.pop();
     }
-
-    //transactionResultDialog.setInfoText(tr("tableWidgetSetItemZebraColor !"));
-    //transactionResultDialog.pop();
-
     tableWidgetSetItemZebraColor(ui->withdrawTableWidget);
 }
 
