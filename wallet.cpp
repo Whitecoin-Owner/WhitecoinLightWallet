@@ -2371,3 +2371,4 @@ QStringList XWCWallet::getWithdrawList()
 }
 
 
+

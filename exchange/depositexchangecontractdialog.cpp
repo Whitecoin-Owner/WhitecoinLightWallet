@@ -98,18 +98,71 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
 
             QString contractAddress = isExchangeMode ? EXCHANGE_MODE_CONTRACT_ADDRESS
                                                      : XWCWallet::getInstance()->getExchangeContractAddress(ui->accountNameLabel->text());
+            //TransactionResultDialog transactionResultDialog;
+            /*transactionResultDialog.setInfoText(tr("isExchangeModeString"));
+            transactionResultDialog.setDetailText(isExchangeModeString);
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("EXCHANGE_MODE_CONTRACT_ADDRESS"));
+            transactionResultDialog.setDetailText(EXCHANGE_MODE_CONTRACT_ADDRESS);
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("XWCWallet::getInstance()->getExchangeContractAddress(ui->accountNameLabel->text())"));
+            transactionResultDialog.setDetailText(XWCWallet::getInstance()->getExchangeContractAddress(ui->accountNameLabel->text()));
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("contractAddress"));
+            transactionResultDialog.setDetailText(contractAddress);
+            transactionResultDialog.pop();*/
 
             feeChoose->updatePoundageID();
+
+            /*transactionResultDialog.setInfoText(tr("Transaction of deposit has been sent out!"));
+            transactionResultDialog.setDetailText(result);
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("ui->accountNameLabel->text()"));
+            transactionResultDialog.setDetailText(ui->accountNameLabel->text());
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("contractAddress"));
+            transactionResultDialog.setDetailText(contractAddress);
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("ui->amountLineEdit->text()"));
+            transactionResultDialog.setDetailText(ui->amountLineEdit->text());
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("getRealAssetSymbol( ui->assetComboBox->currentText())"));
+            transactionResultDialog.setDetailText(getRealAssetSymbol( ui->assetComboBox->currentText()));
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("XWCWallet::getInstance()->currentContractFee()"));
+            transactionResultDialog.setDetailText(XWCWallet::getInstance()->currentContractFee());
+            transactionResultDialog.pop();
+
+            transactionResultDialog.setInfoText(tr("XDTT Token Contract Address"));
+            transactionResultDialog.setDetailText(EXCHANGE_MODE_XDTT_TOKENCONTRACT_ADDRESS);
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("WNTT Token Contract Address"));
+            transactionResultDialog.setDetailText(EXCHANGE_MODE_WNTT_TOKENCONTRACT_ADDRESS);
+            transactionResultDialog.pop();
+
+            transactionResultDialog.setInfoText(tr("XDTT Official Wallet Address"));
+            transactionResultDialog.setDetailText(EXCHANGE_MODE_XDTT_TOKEN_OFFICIALWALLET);
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("WNTT Official Wallet Address"));
+            transactionResultDialog.setDetailText(EXCHANGE_MODE_WNTT_TOKEN_OFFICIALWALLET);
+            transactionResultDialog.pop();
+
+            transactionResultDialog.setInfoText(tr("Deposit Token ui->amountLineEdit->text()"));
+            transactionResultDialog.setDetailText(ui->amountLineEdit->text());
+            transactionResultDialog.pop();
+            transactionResultDialog.setInfoText(tr("XWCWallet::getInstance()->currentContractFee()"));
+            transactionResultDialog.setDetailText(XWCWallet::getInstance()->currentContractFee());
+            transactionResultDialog.pop();*/
+
+
             if (ui->assetComboBox->currentText() == "XWC") {
-
-            XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "transfer_to_contract",
-                                                                                   QJsonArray() << ui->accountNameLabel->text() << contractAddress
-                                                                                   << ui->amountLineEdit->text() << getRealAssetSymbol( ui->assetComboBox->currentText())
-                                                                                   << "deposit to exchange contract"
-                                                                                   << XWCWallet::getInstance()->currentContractFee() << stepCount
-                                                                                   << true
-                                                                                   ));
-
+                XWCWallet::getInstance()->postRPC( "id-transfer_to_contract", toJsonFormat( "transfer_to_contract",
+                                                                                       QJsonArray() << ui->accountNameLabel->text() << contractAddress
+                                                                                       << ui->amountLineEdit->text() << getRealAssetSymbol( ui->assetComboBox->currentText())
+                                                                                       << "deposit to exchange contract"
+                                                                                       << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                                                       << true
+                                                                                       ));
             }
             else //这两个是转到合约XDTT WNTT当中去的转完之后还要在XWC Exchange 合约当中调用账目记录 把对应账号的XDTT WNTT给添加进去
             {
@@ -133,6 +186,15 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
                                                          << XWCWallet::getInstance()->currentContractFee() << stepCount
                                                          << EXCHANGE_MODE_XDTT_TOKENCONTRACT_ADDRESS
                                                          << "transfer"  << params));
+/*
+                    transactionResultDialog.setInfoText(tr(" XDTT Withdraw !!!"));
+                    transactionResultDialog.setDetailText(toJsonFormat( "invoke_contract",
+                                                                        QJsonArray() << ui->accountNameLabel->text()
+                                                                        << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                                        << EXCHANGE_MODE_XDTT_TOKENCONTRACT_ADDRESS
+                                                                        << "transfer"  << params));
+                    transactionResultDialog.pop();
+*/
                 }
                 else if (ui->assetComboBox->currentText() == "WNTT")
                 {
@@ -154,6 +216,14 @@ void DepositExchangeContractDialog::jsonDataUpdated(QString id)
                                                          << XWCWallet::getInstance()->currentContractFee() << stepCount
                                                          << EXCHANGE_MODE_WNTT_TOKENCONTRACT_ADDRESS
                                                          << "transfer"  << params));
+/*
+                    transactionResultDialog.setInfoText(tr(" WNTT Withdraw !!!"));
+                    transactionResultDialog.setDetailText(toJsonFormat( "invoke_contract",
+                                                                        QJsonArray() << ui->accountNameLabel->text()
+                                                                        << XWCWallet::getInstance()->currentContractFee() << stepCount
+                                                                        << EXCHANGE_MODE_WNTT_TOKENCONTRACT_ADDRESS
+                                                                        << "transfer"  << params));
+                    transactionResultDialog.pop();*/
                 }
             }
 
@@ -300,7 +370,8 @@ void DepositExchangeContractDialog::on_assetComboBox_currentIndexChanged(const Q
 {
     AssetAmountMap map = XWCWallet::getInstance()->accountInfoMap.value(ui->accountNameLabel->text()).assetAmountMap;
     AssetInfo assetInfo = XWCWallet::getInstance()->assetInfoMap.value(XWCWallet::getInstance()->getAssetId( getRealAssetSymbol( ui->assetComboBox->currentText())));
-
+    //
+    //ui->balanceLabel->setText(getBigNumberString(map.value(assetInfo.id).amount, assetInfo.precision) + " " + revertERCSymbol( assetInfo.symbol) );
     ui->balanceLabel->setText(getBigNumberString(map.value(assetInfo.id).amount, assetInfo.precision) + " " + revertERCSymbol( assetInfo.symbol) );
 
     QRegExp rx1(QString("^([0]|[1-9][0-9]{0,10})(?:\\.\\d{0,%1})?$|(^\\t?$)").arg(assetInfo.precision));
